@@ -1,6 +1,6 @@
 function [fig_out] = f_fig_epi_parc(data,configs,subjID)
-    Subj_T1 = fullfile(configs.path2data,subjID,configs.T1dir);
-    path2EPI = fullfile(configs.path2data,subjID,configs.EPIdir);
+    Subj_T1 = fullfile(configs.path2data,subjID,configs.ses,configs.T1dir);
+    path2EPI = fullfile(configs.path2data,subjID,configs.ses,configs.EPIdir);
     % get a list of parcellation files
     MeanVol=MRIread(fullfile(path2EPI,'2_epi_meanvol.nii.gz'));
     parcs=dir(fullfile(path2EPI,'rT1_GM_parc*clean*'));
@@ -27,6 +27,10 @@ function [fig_out] = f_fig_epi_parc(data,configs,subjID)
             numplot=n+(length(slices)*(p-1));
             subplot(numparcs,length(slices),numplot)
             fig_out(1)=imagesc(MeanVol.vol(:,:,slices(n))); % plot T1 slice
+            parc_title = strrep(parcs(p).name,'rT1_GM_parc_','');
+            parc_title = strrep(parc_title,'_clean','');
+            parc_title = strrep(parc_title,'.nii.gz','');
+            text(5,10,parc_title,'Color','red','FontSize',10)
             hold on
             % scale parcellation IDs to ID+twice the maximun T1 intensity
             % this ensures the color portion of the colormap is used
@@ -47,10 +51,10 @@ function [fig_out] = f_fig_epi_parc(data,configs,subjID)
     cpmap=vertcat(c2map,c3map);
     colormap(cpmap)
     sgtitle(sprintf('%s: EPI-GM parc overlays',subjID),'Interpreter','none')
-    fileout = fullfile(configs.paths.QAdir,sprintf('6-rT1_GM_parc_on_epi_meanVol.png'));
+    fileout = fullfile(configs.paths.QAdir,sprintf('09_epi_parc.png'));
     count=length(dir(strcat(fileout(1:end-4),'*')));
     if count > 0
-        fileout = fullfile(configs.paths.QAdir,sprintf('6-rT1_GM_parc_on_epi_meanVol_v%d.png',count+1));
+        fileout = fullfile(configs.paths.QAdir,sprintf('09_epi_parc_v%d.png',count+1));
     end
     print(fileout,'-dpng','-r600')
     close all

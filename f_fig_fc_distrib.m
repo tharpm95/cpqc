@@ -1,4 +1,7 @@
-function [figures] = f_fig_fc_distrib(data,configs,subjID)
+function [figures] = f_fig_fc_distrib(data,configs,subjID,distribs)
+    toggle_pearson = distribs(1);
+    toggle_spearman = distribs(2);
+    toggle_zscore = distribs(3);
     checkParcs = zeros(1,10); % Assumes you will never have more than 10 parcs
     for parc = 1:max(size(data.parc_data))
         if ~isempty(data.parc_data{parc}) && data.parc_label(parc) ~= 'NonNodal'
@@ -124,6 +127,33 @@ function [figures] = f_fig_fc_distrib(data,configs,subjID)
                 caxis([configs.EPI.fcColorMinP configs.EPI.fcColorMaxP])
                 colorbar('Ticks',linspace(configs.EPI.fcColorMinP, configs.EPI.fcColorMaxP,5))
                 axis square
+            end
+            if fig == 1 && toggle_pearson == 1
+               fileout = fullfile(configs.paths.QAdir,'02_fig_regression.png');
+               disp('Saved Pearson FC distribution plots.')
+               count=length(dir(strcat(fileout(1:end-4),'*')));
+               if count > 0
+                  fileout = fullfile(configs.paths.QAdir,sprintf('02_fig_regression_v%d.png',count+1));
+               end
+               print(fileout,'-dpng','-r600')
+            end
+            if fig == 2 && toggle_spearman == 1
+               fileout = fullfile(configs.paths.QAdir,'02_fig_regression.png');
+               disp('Saved Spearman FC distribution plots.')
+               count=length(dir(strcat(fileout(1:end-4),'*')));
+               if count > 0
+                  fileout = fullfile(configs.paths.QAdir,sprintf('02_fig_regression_v%d.png',count+1));
+               end
+               print(fileout,'-dpng','-r600')
+            end
+            if fig == 3 && toggle_zscore == 1
+               fileout = fullfile(configs.paths.QAdir,'02_fig_regression.png');
+               disp('Saved Z-score FC distribution plots.')
+               count=length(dir(strcat(fileout(1:end-4),'*')));
+               if count > 0
+                   fileout = fullfile(configs.paths.QAdir,sprintf('02_fig_regression_v%d.png',count+1));
+               end
+               print(fileout,'-dpng','-r600')
             end
         end
     end

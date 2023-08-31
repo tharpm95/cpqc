@@ -1,15 +1,15 @@
 function [fig_out] = f_fig_mni_contour(data,configs,subjID)
     MNI = fullfile(configs.path2SM,'MNI_templates','MNI152_T1_1mm.nii.gz');
-    Subj_T1 = fullfile(configs.path2data,subjID,configs.T1dir);
+    Subj_T1 = fullfile(configs.path2data,subjID,configs.ses,configs.T1dir);
     T1mnifile = fullfile(Subj_T1,'registration','T1_warped.nii.gz');
     if exist(T1mnifile,'file')
         T1mni=MRIread(T1mnifile);
         upperT1=.75*(max(max(max(T1mni.vol))));
         MNIt=MRIread(MNI);
-        filename=fullfile(configs.paths.QAdir,'2-T1_warped_contour_onMNI.gif');
+        filename=fullfile(configs.paths.QAdir,'05_fig_mni_contour_.gif');
         count=length(dir(strcat(filename(1:end-4),'*')));
         if count > 0
-            filename = fullfile(configs.paths.QAdir,sprintf('2-T1_warped_contour_onMNI_v%d.gif',count+1));
+            filename = fullfile(configs.paths.QAdir,sprintf('05_fig_mni_contour_v%d.gif',count+1));
         end
         % open figure
         fig_out=figure;
@@ -37,6 +37,6 @@ function [fig_out] = f_fig_mni_contour(data,configs,subjID)
         end
         close all
     else
-        fprintf('%s: No T1_warped.nii.gz found.\n',subjectList(k).name)
+        fprintf('%s: No T1_warped.nii.gz found.\n',subjID)
     end
 end

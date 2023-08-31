@@ -1,5 +1,5 @@
-function [fig_out] = f_fig_gm_parc_fov(data,configs,subjID)
-    Subj_T1 = fullfile(configs.path2data,subjID,configs.T1dir);
+function [fig_out] = f_fig_t1_parc(data,configs,subjID)
+    Subj_T1 = fullfile(configs.path2data,subjID,configs.ses,configs.T1dir);
     parcs=dir(fullfile(Subj_T1,'T1_GM_parc*'));
     % remove the dilated versions
     idx=double.empty;
@@ -37,6 +37,9 @@ function [fig_out] = f_fig_gm_parc_fov(data,configs,subjID)
                 numplot=n+(5*(p-1));
                 subplot(numparcs,5,numplot)
                 fig_out(1)=imagesc(T1.vol(:,:,slices(n))); % plot T1 slice
+                parc_title = strrep(parcs(p).name,'T1_GM_parc_','');
+                parc_title = strrep(parc_title,'.nii.gz','');
+                text(5,15,parc_title,'Color','red','FontSize',10)
                 hold on
                 % scale parcellation IDs to ID+twice the maximun T1 intensity
                 % this ensures the color portion of the colormap is used
@@ -57,10 +60,10 @@ function [fig_out] = f_fig_gm_parc_fov(data,configs,subjID)
         cpmap=vertcat(c2map,c3map);
         colormap(cpmap)
         sgtitle(sprintf('%s: GM parcs overlays',subjID),'Interpreter','none')
-        fileout = fullfile(configs.paths.QAdir,'3-GM_parc_on_fov_denoised.png');
+        fileout = fullfile(configs.paths.QAdir,'06_t1_parc.png');
         count=length(dir(strcat(fileout(1:end-4),'*')));
         if count > 0
-            fileout = fullfile(configs.paths.QAdir,sprintf('3-GM_parc_on_fov_denoised_v%d.png',count+1));
+            fileout = fullfile(configs.paths.QAdir,sprintf('06_t1_parc_v%d.png',count+1));
         end
         print(fileout,'-dpng','-r600')
         close all

@@ -1,6 +1,6 @@
 function [fig_out] = f_fig_mcflirt_mot(data,configs,subjID)
-    Subj_T1 = fullfile(configs.path2data,subjID,configs.T1dir);
-    path2EPI = fullfile(configs.path2data,subjID,configs.EPIdir);
+    Subj_T1 = fullfile(configs.path2data,subjID,configs.ses,configs.T1dir);
+    path2EPI = fullfile(configs.path2data,subjID,configs.ses,configs.EPIdir);
     motion=dlmread(fullfile(path2EPI,'motion.txt'));
     rmax = max(max(abs(motion(:,1:3))));
     fig_out=figure('Units','inches','Position',[1 1 10 5]);
@@ -25,10 +25,10 @@ function [fig_out] = f_fig_mcflirt_mot(data,configs,subjID)
     ylabel('millimeters')
     hold off
     sgtitle(sprintf('%s: mcFLIRT motion parameters',subjID),'Interpreter','none')
-    fileout = fullfile(configs.paths.QAdir,sprintf('4-mcFLIRT_motion_parameters.png'));
+    fileout = fullfile(configs.paths.QAdir,sprintf('07_mcflirt_mot.png'));
     count=length(dir(strcat(fileout(1:end-4),'*')));
     if count > 0
-        fileout = fullfile(configs.paths.QAdir,sprintf('4-mcFLIRT_motion_parameters_v%d.png',count+1));
+        fileout = fullfile(configs.paths.QAdir,sprintf('07_mcflirt_mot_v%d.png',count+1));
     end
     print(fileout,'-dpng','-r600')
     close all

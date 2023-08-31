@@ -16,4 +16,10 @@ function [fig_out] = f_fig_dvars_stats(data,configs,subjID)
     fMRIDiag_plot(V,DVARS_Stat,'BOLD',Y,'figure',fig_out)
     %     end
     sgtitle({sprintf('%s',subjID)})
+    fileout = fullfile(configs.paths.QAdir,'03_fig_dvars_stats.png');
+    count=length(dir(strcat(fileout(1:end-4),'*')));
+    if count > 0
+       fileout = fullfile(configs.paths.QAdir,sprintf('03_fig_dvars_stats_v%d.png',count+1));
+    end
+    print(fileout,'-dpng','-r600')
 end

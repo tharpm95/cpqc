@@ -34,4 +34,10 @@ function [fig_out] = f_fig_regression(data,configs,subjID)
     clrmp(32,:)=[1,1,1];
     colormap(clrmp)
     set(gcf,'Position',[250 100 1200 800])
+    fileout = fullfile(configs.paths.QAdir,'01_fig_regression.png');
+    count=length(dir(strcat(fileout(1:end-4),'*')));
+    if count > 0
+       fileout = fullfile(configs.paths.QAdir,sprintf('01_fig_regression_v%d.png',count+1));
+    end
+    print(fileout,'-dpng','-r600')
 end

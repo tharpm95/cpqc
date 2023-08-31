@@ -1,6 +1,6 @@
 function [fig_out] = f_fig_epi_mask(data,configs,subjID)
-    Subj_T1 = fullfile(configs.path2data,subjID,configs.T1dir);
-    path2EPI = fullfile(configs.path2data,subjID,configs.EPIdir);
+    Subj_T1 = fullfile(configs.path2data,subjID,configs.ses,configs.T1dir);
+    path2EPI = fullfile(configs.path2data,subjID,configs.ses,configs.EPIdir);
     % Set filenames/read in data
     MeanVol=MRIread(fullfile(path2EPI,'2_epi_meanvol.nii.gz'));
     mask=MRIread(fullfile(path2EPI,'rT1_GM_mask.nii.gz'));
@@ -34,10 +34,10 @@ function [fig_out] = f_fig_epi_mask(data,configs,subjID)
     end
     % Add title to figure and save as high resolution png
     sgtitle(sprintf('%s: rT1_GM_mask on epi_meanvol',subjID),'Interpreter','none')
-    fileout = fullfile(configs.paths.QAdir,sprintf('5-rT1_GM_mask_on_epiMeanVol.png'));
+    fileout = fullfile(configs.paths.QAdir,sprintf('08_epi_mask.png'));
     count=length(dir(strcat(fileout(1:end-4),'*')));
     if count > 0
-        fileout = fullfile(configs.paths.QAdir,sprintf('5-rT1_GM_mask_on_epiMeanVol_v%d.png',count+1));
+        fileout = fullfile(configs.paths.QAdir,sprintf('08_epi_mask_v%d.png',count+1));
     end
     print(fileout,'-dpng','-r600')
     close all

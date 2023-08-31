@@ -1,17 +1,7 @@
 function [fig_out, configs] = f_fig_t1_mask(data,configs,subjID)
-    Subj_T1 = fullfile(configs.path2data,subjID,configs.T1dir);
-    path2EPI = fullfile(configs.path2data,subjID,configs.EPIdir);
-    T1fpath=fullfile(Subj_T1,'T1_fov_denoised.nii');
-    maskfpath=fullfile(Subj_T1,'T1_brain_mask_filled.nii.gz');
-    configs.paths.subject=fullfile(configs.path2data,subjID); % path to subject
-    configs.paths.QAdir=fullfile(configs.paths.subject,'QC_figures'); %output directory
-    if ~exist(configs.paths.QAdir,'dir')
-        mkdir(configs.paths.QAdir) % make output directory if it doesn't exist
-    end
-
-    if isfile(T1fpath) && isfile(maskfpath)
-        T1=MRIread(T1fpath);
-        mask=MRIread(maskfpath);
+    if isfile(configs.T1fpath) && isfile(configs.maskfpath)
+        T1=MRIread(configs.T1fpath);
+        mask=MRIread(configs.maskfpath);
         % Select representative slices from T1 volume
         midslice=round(size(T1.vol,3)/2);
         slices=[midslice-30 midslice-15 midslice midslice+25 midslice+40];
@@ -40,10 +30,10 @@ function [fig_out, configs] = f_fig_t1_mask(data,configs,subjID)
         end
         % Add title to figure and save as high resolution png
         sgtitle(sprintf('%s: T1 brain mask overlay',subjID),'Interpreter','none')
-        fileout = fullfile(configs.paths.QAdir,'1-brain_mask_on_fov_denoised.png');
+        fileout = fullfile(configs.paths.QAdir,'04_fig_t1_mask.png');
         count=length(dir(strcat(fileout(1:end-4),'*')));
         if count > 0
-            fileout = fullfile(configs.paths.QAdir,sprintf('1-brain_mask_on_fov_denoised_v%d.png',count+1));
+            fileout = fullfile(configs.paths.QAdir,sprintf('04_fig_t1_mask_v%d.png',count+1));
         end
         print(fileout,'-dpng','-r600')
         close all
